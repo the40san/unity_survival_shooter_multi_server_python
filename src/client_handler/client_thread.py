@@ -1,12 +1,14 @@
 import threading
 import socket
 from client_handler.message_handler import MessageHandler
+from server_resource.resource_manager import ResourceManager
 from logger import Logger
 
 class ClientThread(threading.Thread):
     def __init__(self, socket):
         self.socket = socket
         self.message_handler = MessageHandler()
+        self.client_id = ResourceManager.instance().create_client_id()
         threading.Thread.__init__(self)
 
     def run(self):
@@ -34,7 +36,7 @@ class ClientThread(threading.Thread):
     def handle_client_request(self, cl_request):
         if cl_request != None:
             try:
-                cl_request.execute()
+                cl_request.execute(self.client_id)
                 self.send_message_to_socket(cl_request.response().payload())
             except:
                 import traceback

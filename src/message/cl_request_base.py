@@ -13,7 +13,7 @@ class ClRequestBase:
         """ OVERRIDE THIS TO IMPLEMENT """
         raise
 
-    def execute(self):
+    def execute(self, client_id):
         """ OVERRIDE THIS TO IMPLEMENT """
         raise
 
