@@ -27,7 +27,7 @@ class ResourceManager:
 
         self.lock_for_resource.release()
 
-    def create_player_id(self):
+    def create_client_id(self):
         self.lock_for_resource.acquire()
 
         self.latest_player_id += 1
