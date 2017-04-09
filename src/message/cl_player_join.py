@@ -2,6 +2,7 @@ from message.cl_request_base import ClRequestBase
 from message.sv_ack import SvAck
 from server_resource.resource_manager import ResourceManager
 from server_resource.model.player import Player
+from logger import Logger
 import struct
 
 class ClPlayerJoin(ClRequestBase):
