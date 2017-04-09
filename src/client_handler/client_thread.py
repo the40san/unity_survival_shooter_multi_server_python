@@ -1,7 +1,7 @@
 import threading
 import socket
 from client_handler.message_handler import MessageHandler
-from loggger import Logger
+from logger import Logger
 
 class ClientThread(threading.Thread):
     def __init__(self, socket):
