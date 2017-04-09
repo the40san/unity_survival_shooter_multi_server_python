@@ -17,18 +17,19 @@ class ClientThread(threading.Thread):
                 msg = bytes(self.receive_message_from_socket())
             except OSError:
                 Logger.log("socket receive timeout. closing")
-                self.disconnect()
                 break
             except:
                 Logger.log("someting wrong")
                 break
             else:
                 if len(msg) == 0:
-                    # no message.
-                    continue
+                    # client disconnected
+                    break
                 else:
                     cl_request = self.message_handler.receive_request(msg)
                     self.handle_client_request(cl_request)
+
+        self.disconnect()
 
     def handle_client_request(self, cl_request):
         if cl_request != None:
@@ -50,4 +51,5 @@ class ClientThread(threading.Thread):
 
     def disconnect(self):
         self.socket.close()
+        Logger.log("disconnecting")
         return
