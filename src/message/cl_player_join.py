@@ -1,6 +1,8 @@
 from message.cl_request_base import ClRequestBase
-from message.sv_ack import SvAck
+from message.sv_player_join import SvPlayerJoin
+from message.sv_new_player import SvNewPlayer
 from server_resource.model.player import Player
+from server_resource.resource_manager import ResourceManager
 from logger import Logger
 import struct
 
@@ -12,8 +14,11 @@ class ClPlayerJoin(ClRequestBase):
         pass
 
     def execute(self, client_id):
-        player = Player(client_id, 0, 0, 0, 100)
-        ResourceManager.instance().add_player(player)
+        self.player = Player(client_id, 0, 0, 0, 100)
+        ResourceManager.instance().add_player(self.player)
 
     def response(self):
-        return SvAck(self)
+        return SvPlayerJoin(self)
+
+    def broadcast(self):
+        return SvNewPlayer(self)

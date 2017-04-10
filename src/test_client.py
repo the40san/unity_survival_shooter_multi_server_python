@@ -11,11 +11,13 @@ def main():
         sock.connect((host, port))
 
         # join player
-        print("join_player")
-        msg = parse_message("join_player")
-        sock.send(msg)
-        print(msg)
-        print(sock.recv(4096))
+        while True:
+            print("join_player")
+            msg = parse_message("join_player")
+            sock.send(msg)
+            print(msg)
+            print(sock.recv(4096))
+            time.sleep(1)
 
         while True:
             print(">>> ", end='')

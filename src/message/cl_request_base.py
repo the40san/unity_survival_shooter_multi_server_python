@@ -20,4 +20,7 @@ class ClRequestBase:
     def response(self):
         """ OVERRIDE THIS TO IMPLEMENT """
         raise
-        return
+
+    def broadcast(self):
+        """ OVERRIDE THIS TO IMPLEMENT """
+        return None

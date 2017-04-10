@@ -2,13 +2,16 @@ import socket
 import select
 from server_info import ServerInfo
 from client_handler.client_thread import ClientThread
+from server_handler.server_thread import ServerThread
+from server_handler.server_thread_proxy import ServerThreadProxy
 from logger import Logger
 
 class ServerMainLoop:
     def __init__(self):
         self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.read_fds = set([self.listener])
-
+        self.server_thread = ServerThread()
+        self.server_thread.start()
 
     def exec(self):
         try:
@@ -25,9 +28,7 @@ class ServerMainLoop:
                 self.main_loop()
 
         finally:
-            for sock in self.read_fds:
-                sock.close()
-
+            self.shutdown()
 
     def main_loop(self):
         read_ready, write_ready, err_ready = select.select(self.read_fds, [], [])
@@ -46,6 +47,15 @@ class ServerMainLoop:
 
 
     def accept_new_message(self, sock):
-        thread = ClientThread(sock)
+        thread = ClientThread(sock, ServerThreadProxy(self.server_thread))
         self.read_fds.remove(sock)
+        self.server_thread.add_client(thread)
         thread.start()
+
+
+    def shutdown(self):
+        Logger.log("shutting down")
+        for sock in self.read_fds:
+            sock.close()
+        self.server_thread.shutdown()
+        self.server_thread.join()
